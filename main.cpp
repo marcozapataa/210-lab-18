@@ -2,9 +2,9 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <random>
+#include <cstdlib>
+#include <ctime>
 #include <iomanip>
-#include <cmath>
 
 using namespace std;
 
@@ -45,11 +45,28 @@ class Movie {
         head = nullptr;
 
         Review* current = other.head;
+        Review* tail = nullptr;
 
         while (current != nullptr) {
-            addReview(current->rating, current->comment);
+            
+            //Create a new review
+            Review* newReview = new Review;
+            newReview->rating = current->rating;
+            newReview->comment = current->comment;
+            newReview->next = nullptr;
+
+            // if first review
+            if (head == nullptr) {
+                head = newReview;
+                tail = newReview;
+            }
+            else {
+                // Add review to end of list
+                tail->next = newReview;
+                tail = newReview;
+            }
+
             current = current->next;
-        }
     }
 
     //Copy assignment operator
@@ -69,6 +86,7 @@ class Movie {
 
             //Copy reviews
             Review* current = other.head;
+            Review* tail = nullptr;
 
             while (current != nullptr) {
                 addReview(current->rating, current->comment);
@@ -131,6 +149,8 @@ double getRandomRating();
 
 int main() {
 
+    srand(time(0));
+
     // Store review comments
     vector<string> comments;
 
@@ -156,7 +176,7 @@ int main() {
     // Add 3 reviews to each movie
     int commentIndex = 0;
 
-    for (int i = 0; i < movie.size(); i++) {
+    for (int i = 0; i < movies.size(); i++) {
 
         // Add reviews in reverse order because addReview() adds each to head
         for (int j = 2; j >= 0; j--) {
@@ -171,6 +191,47 @@ int main() {
         commentIndex += 3;
     }
 
+    // Display movies
+    for (int i = 0; i < movies.size(); i++) {
+        movies[i].displayReviews();
+    }
+
 
     return 0;
+}
+
+// -----Function Definitions---------
+
+//Definition for readReviews
+bool readReviews(const string& filename, vector<string>& comments) {
+
+    ifstream inFile(filename);
+
+    // check if file opened
+    if (!inFile) {
+        cout << "Error: Could not open input file " << filename << endl;
+        return false;
+    }
+
+    string line;
+
+    // Read one comment per line
+    while (getline(inFile, line)) {
+
+        if (!line.empty()) {
+            comments.push_back(line);
+        }
+    }
+
+    inFile.close();
+
+    return true;
+}
+
+// Definition for getRandomRating
+double getRandomRating() {
+
+    double rating = 1.0 + (rand() % 41) / 10.0;
+    return rating;
+
 }
