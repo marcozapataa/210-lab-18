@@ -129,8 +129,47 @@ class Movie {
 bool readReviews(const string& filename, vector<string>& comments);
 double getRandomRating();
 
-
 int main() {
+
+    // Store review comments
+    vector<string> comments;
+
+    // Read reviews from input file
+    if (!readReviews("input.txt", comments)) {
+        return 1;
+    }
+
+    // Check for enough reviews
+    if (comments.size() < 12) {
+        cout << "Error: file must contain at least 12 reviews." << endl;
+        return 1;
+    }
+
+    // Create vector of Movie objects
+    vector<Movie> movies;
+
+    movies.push_back(Movie("Lord of the Rings"));
+    movies.push_back(Movie("The Godfather"));
+    movies.push_back(Movie("Star Wars"));
+    movies.push_back(Movie("Jurassic Park"));
+
+    // Add 3 reviews to each movie
+    int commentIndex = 0;
+
+    for (int i = 0; i < movie.size(); i++) {
+
+        // Add reviews in reverse order because addReview() adds each to head
+        for (int j = 2; j >= 0; j--) {
+
+            double rating = getRandomRating();
+
+            movies[i].addReview(rating,
+                comments[commentIndex + j]
+            );
+        }
+
+        commentIndex += 3;
+    }
 
 
     return 0;
