@@ -67,7 +67,9 @@ class Movie {
             }
 
             current = current->next;
+        }
     }
+
 
     //Copy assignment operator
     Movie& operator=(const Movie& other) {
@@ -89,7 +91,24 @@ class Movie {
             Review* tail = nullptr;
 
             while (current != nullptr) {
-                addReview(current->rating, current->comment);
+                
+                // Create new review
+                Review* newReview = new Review;
+                newReview->rating = current->rating;
+                newReview->comment = current->comment;
+                newReview->next = nullptr;
+
+                //if first review
+                if (head == nullptr) {
+                    head = newReview;
+                    tail = newReview;
+                }
+                else {
+                    // Add review to end
+                    tail->next = newReview;
+                    tail = newReview;
+                }
+
                 current = current->next;
             }
         }
@@ -132,13 +151,16 @@ class Movie {
         }
 
         // Calculate average
-        double average = totalRating / count;
+        if (count > 0) {
+            double average = totalRating / count;
 
-        cout << " > Average: "
-             << fixed << setprecision(1)
-             << average << endl;
+            cout << " > Average: "
+                 << fixed << setprecision(1)
+                 << average << endl;
 
-        cout << endl;
+            cout << endl;
+        }
+        
     }
     
 };
